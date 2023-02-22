@@ -1,13 +1,14 @@
-package com.example;
+package com.skeldoor;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.ui.overlay.components.ComponentConstants;
 
 import java.awt.*;
 
-@ConfigGroup("example")
-public interface ExampleConfig extends Config
+@ConfigGroup("Mini Bars")
+public interface MiniBarsConfig extends Config
 {
 
 	@ConfigItem
@@ -62,6 +63,32 @@ public interface ExampleConfig extends Config
 			description = "Choose the background colour of the run energy bar"
 	)
 	default Color energyColour() { return Color.orange; }
+
+	@ConfigItem
+			(
+					position = 7,
+					keyName = "showSpec",
+					name = "Show Spec",
+					description = "Render Special Attack overlay"
+			)
+
+	default boolean renderSpec() { return false; }
+
+	@ConfigItem(
+			position = 8,
+			keyName = "specColour",
+			name = "Spec Colour",
+			description = "Choose the background colour of the Spec bar"
+	)
+	default Color specColour() { return Color.yellow; }
+
+	@ConfigItem(
+			position = 9,
+			keyName = "specSize",
+			name = "Spec Size",
+			description = "Choose the size of the Spec bar"
+	)
+	default Dimension specSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 16); }
 
 
 }
