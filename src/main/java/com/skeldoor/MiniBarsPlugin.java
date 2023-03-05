@@ -4,20 +4,10 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.events.BeforeRender;
-import net.runelite.api.events.GameTick;
-import net.runelite.api.events.ScriptPreFired;
-import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
-
-import java.lang.reflect.Field;
-import java.util.Objects;
 
 @Slf4j
 @PluginDescriptor(
@@ -62,12 +52,6 @@ public class MiniBarsPlugin extends Plugin
 		overlayManager.remove(prayerOverlay);
 		overlayManager.remove(energyOverlay);
 		overlayManager.remove(specOverlay);
-	}
-
-	@Subscribe
-	public void onScriptPreFired (ScriptPreFired scriptPreFired)
-	{
-
 	}
 
 	@Provides

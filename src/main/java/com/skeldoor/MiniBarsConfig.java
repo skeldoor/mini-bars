@@ -4,7 +4,6 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.ui.overlay.components.ComponentConstants;
-
 import java.awt.*;
 
 @ConfigGroup("Mini Bars")
@@ -28,9 +27,17 @@ public interface MiniBarsConfig extends Config
 			description = "Choose the background colour of the health bar"
 	)
 	default Color healthColour() { return Color.RED; }
+
+	@ConfigItem(
+			position = 3,
+			keyName = "healthSize",
+			name = "Health Size",
+			description = "Choose the size of the Health bar"
+	)
+	default Dimension healthSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 0); }
 	@ConfigItem
 			(
-					position = 3,
+					position = 4,
 					keyName = "showPrayer",
 					name = "Show Prayer",
 					description = "Render Prayer overlay"
@@ -39,16 +46,26 @@ public interface MiniBarsConfig extends Config
 	default boolean renderPrayer() { return false; }
 
 	@ConfigItem(
-			position = 4,
+			position = 5,
 			keyName = "prayerColour",
 			name = "Prayer Colour",
 			description = "Choose the background colour of the prayer bar"
 	)
 	default Color prayerColour() { return Color.CYAN; }
 
+
+	@ConfigItem(
+			position = 6,
+			keyName = "prayerSize",
+			name = "Prayer Size",
+			description = "Choose the size of the Prayer bar"
+	)
+	default Dimension prayerSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 0); }
+
+
 	@ConfigItem
 			(
-					position = 5,
+					position = 7,
 					keyName = "showEnergy",
 					name = "Show Energy",
 					description = "Render Run Energy overlay"
@@ -57,16 +74,24 @@ public interface MiniBarsConfig extends Config
 	default boolean renderEnergy() { return false; }
 
 	@ConfigItem(
-			position = 6,
+			position = 8,
 			keyName = "energyColour",
 			name = "Energy Colour",
 			description = "Choose the background colour of the run energy bar"
 	)
 	default Color energyColour() { return Color.orange; }
 
+	@ConfigItem(
+			position = 9,
+			keyName = "energySize",
+			name = "Energy Size",
+			description = "Choose the size of the Energy bar"
+	)
+	default Dimension energySize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 0); }
+
 	@ConfigItem
 			(
-					position = 7,
+					position = 10,
 					keyName = "showSpec",
 					name = "Show Spec",
 					description = "Render Special Attack overlay"
@@ -75,7 +100,7 @@ public interface MiniBarsConfig extends Config
 	default boolean renderSpec() { return false; }
 
 	@ConfigItem(
-			position = 8,
+			position = 11,
 			keyName = "specColour",
 			name = "Spec Colour",
 			description = "Choose the background colour of the Spec bar"
@@ -83,12 +108,11 @@ public interface MiniBarsConfig extends Config
 	default Color specColour() { return Color.yellow; }
 
 	@ConfigItem(
-			position = 9,
+			position = 12,
 			keyName = "specSize",
 			name = "Spec Size",
 			description = "Choose the size of the Spec bar"
 	)
-	default Dimension specSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 16); }
-
+	default Dimension specSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 0); }
 
 }
