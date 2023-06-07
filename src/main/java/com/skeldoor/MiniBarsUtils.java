@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class MiniBarsUtils {
 
-    static void buildPanel(PanelComponent panelComponent, int minimum, int maximum, float value, Color foregroundColour, Dimension size) {
+    static void buildPanel(PanelComponent panelComponent, int minimum, int maximum, float value, Color foregroundColour, Dimension size, boolean totalLabels, boolean showLabels) {
         ProgressBarComponent progressBar = new ProgressBarComponent();
         progressBar.setMinimum(minimum);
         progressBar.setMaximum(maximum);
@@ -15,6 +15,18 @@ public class MiniBarsUtils {
         progressBar.setForegroundColor(foregroundColour);
         progressBar.setFontColor(Color.WHITE);
         progressBar.setLabelDisplayMode(ProgressBarComponent.LabelDisplayMode.FULL);
+
+
+
+        if (!showLabels) {
+            progressBar.setLabelDisplayMode(ProgressBarComponent.LabelDisplayMode.TEXT_ONLY);
+        } else {
+            if (!totalLabels){
+                progressBar.setLabelDisplayMode(ProgressBarComponent.LabelDisplayMode.TEXT_ONLY);
+                progressBar.setCenterLabel(String.valueOf((int) value));
+            }
+        }
+
 
         ProgressBarComponent paddingBar = new ProgressBarComponent();
         paddingBar.setMinimum(minimum);

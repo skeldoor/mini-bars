@@ -115,4 +115,24 @@ public interface MiniBarsConfig extends Config
 	)
 	default Dimension specSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 0); }
 
+	@ConfigItem
+			(
+					position = 13,
+					keyName = "totalLabels",
+					name = "Total Labels",
+					description = "Show the label as a fraction of the whole value"
+			)
+
+	default boolean totalLabels() { return true; }
+
+	@ConfigItem
+			(
+					position = 14,
+					keyName = "showLabels",
+					name = "Show Labels",
+					description = "Show labels on the minibars"
+			)
+
+	default boolean showLabels() { return true; }
+
 }
