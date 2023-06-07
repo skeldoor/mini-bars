@@ -47,6 +47,8 @@ public class MiniBarsPrayerOverlay extends OverlayPanel{
                 client.getRealSkillLevel(Skill.PRAYER),
                 client.getBoostedSkillLevel(Skill.PRAYER),
                 config.prayerColour(),
-                config.prayerSize());
+                config.prayerSize(),
+                config.totalLabels(),
+                config.showLabels());
     }
 }

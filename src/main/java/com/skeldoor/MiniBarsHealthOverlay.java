@@ -45,6 +45,8 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
                 client.getRealSkillLevel(Skill.HITPOINTS),
                 client.getBoostedSkillLevel(Skill.HITPOINTS),
                 config.healthColour(),
-                config.healthSize());
+                config.healthSize(),
+                config.totalLabels(),
+                config.showLabels());
     }
 }

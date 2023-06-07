@@ -46,6 +46,8 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
                 100,
                 (int)(client.getEnergy() / 100f),
                 config.energyColour(),
-                config.energySize());
+                config.energySize(),
+                config.totalLabels(),
+                config.showLabels());
     }
 }

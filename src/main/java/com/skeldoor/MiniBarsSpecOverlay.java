@@ -46,6 +46,8 @@ public class MiniBarsSpecOverlay extends OverlayPanel{
                100,
                client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT)/10f,
                config.specColour(),
-               config.specSize());
+               config.specSize(),
+                config.totalLabels(),
+                config.showLabels());
     }
 }
