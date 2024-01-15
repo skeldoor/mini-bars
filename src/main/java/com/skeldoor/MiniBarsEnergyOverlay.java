@@ -80,7 +80,7 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderEnergy() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.energyFullnessDirection(), config.energyLabelPosition(), config.energySize().width, config.energySize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.energyFullnessDirection(), config.energyLabelStyle(), config.energyLabelPosition(), config.energySize().width, config.energySize().height );
 
             return config.energySize();
         }

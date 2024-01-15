@@ -63,7 +63,7 @@ public class MiniBarsSpecialOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderSpecial() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.specialFullnessDirection(), config.specialLabelPosition(), config.specialSize().width, config.specialSize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.specialFullnessDirection(), config.specialLabelStyle(), config.specialLabelPosition(), config.specialSize().width, config.specialSize().height );
 
             return config.specialSize();
         }

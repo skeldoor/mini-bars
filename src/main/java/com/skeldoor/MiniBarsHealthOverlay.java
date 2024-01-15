@@ -40,10 +40,9 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
             MiniBarsConfig config,
             ItemStatChangesService itemstatservice)
     {
-        //super(plugin);
+        super(plugin);
 
         //setPriority(OverlayPriority.LOW);
-        //setBounds( new Rectangle( config.healthSize().width, config.healthSize().height ) );
         setPosition(OverlayPosition.DYNAMIC);
         setLayer(OverlayLayer.ABOVE_WIDGETS);
         setMovable(true);
@@ -98,7 +97,7 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderHealth() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.healthFullnessDirection(), config.healthLabelPosition(), config.healthSize().width, config.healthSize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.healthFullnessDirection(), config.healthLabelStyle(), config.healthLabelPosition(), config.healthSize().width, config.healthSize().height );
             return config.healthSize();
         }
 

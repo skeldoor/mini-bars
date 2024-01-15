@@ -57,7 +57,7 @@ class MiniBarsComponent
         currentValue = currentValueSupplier.get();
     }
 
-    void renderBar(MiniBarsConfig config, Graphics2D graphics, PanelComponent component, FullnessDirection dir, LabelPlacement labelLoc, int width, int height)
+    void renderBar(MiniBarsConfig config, Graphics2D graphics, PanelComponent component, FullnessDirection dir, LabelStyle labelStyle, LabelPlacement labelLoc, int width, int height)
     {
         PanelComponent boundingBox = new PanelComponent();
         boundingBox.setBorder( new Rectangle( component.getBounds().x, component.getBounds().y, width, height ) );
@@ -112,17 +112,22 @@ class MiniBarsComponent
             renderRestore(config, graphics, dir, component.getBounds().x, component.getBounds().y, width, height);
         }
 
-        if ( config.showLabels() )
+        if ( labelStyle != LabelStyle.HIDE )
         {
-            renderText(config, graphics, labelLoc, component.getBounds().x, component.getBounds().y, width, height );
+            renderText(config, graphics, labelStyle, labelLoc, component.getBounds().x, component.getBounds().y, width, height );
         }
     }
 
-    private void renderText(MiniBarsConfig config, Graphics2D graphics, LabelPlacement labelLoc, int x, int y, int barWidth, int barHeight )
+    private void renderText(MiniBarsConfig config, Graphics2D graphics, LabelStyle labelStyle, LabelPlacement labelLoc, int x, int y, int barWidth, int barHeight )
     {
         graphics.setFont(FontManager.getRunescapeSmallFont());
+
         String counterText = Integer.toString(currentValue);
-        if ( !config.totalLabels() )
+        if ( labelStyle == LabelStyle.SHOW_CURRENT_AND_MAXIMUM )
+        {
+            counterText = currentValue + " / " + maxValue;
+        }
+        else if ( labelStyle == LabelStyle.SHOW_PERCENTAGE )
         {
             df.setRoundingMode( RoundingMode.DOWN );
             counterText = df.format( (float) (currentValue * 100) / maxValue ) + "%";
@@ -245,7 +250,6 @@ class MiniBarsComponent
             {
                 fillWidth = width - filledCurrentSize + 1;
             }
-
         }
 
         graphics.fillRect( fillX + BORDER_SIZE , fillY + BORDER_SIZE, fillWidth - BORDER_SIZE, fillHeight - BORDER_SIZE );

@@ -83,7 +83,7 @@ public class MiniBarsPrayerOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderPrayer() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.prayerFullnessDirection(), config.prayerLabelPosition(), config.prayerSize().width, config.prayerSize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.prayerFullnessDirection(), config.prayerLabelStyle(), config.prayerLabelPosition(), config.prayerSize().width, config.prayerSize().height );
 
             return config.prayerSize();
         }
