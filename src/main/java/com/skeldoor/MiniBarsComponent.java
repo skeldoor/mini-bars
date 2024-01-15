@@ -136,7 +136,7 @@ class MiniBarsComponent
         if ( labelLoc == LabelPlacement.CENTRE )
         {
             xOffset = (barWidth / 2) - (sizeOfCounterX / 2);
-            yOffset = (barHeight / 2);
+            yOffset = (barHeight / 2) + (sizeOfCounterY / 2);
         }
         else if ( labelLoc == LabelPlacement.BOTTOM )
         {
@@ -145,12 +145,12 @@ class MiniBarsComponent
         else if ( labelLoc == LabelPlacement.LEFT )
         {
             xOffset = -(int) Math.floor(sizeOfCounterX * 1.125);
-            yOffset = (barHeight / 2);
+            yOffset = (barHeight / 2) + (sizeOfCounterY / 2);
         }
         else if ( labelLoc == LabelPlacement.RIGHT )
         {
             xOffset = barWidth + 2;
-            yOffset = (barHeight / 2);
+            yOffset = (barHeight / 2) + (sizeOfCounterY / 2);
         }
 
         final TextComponent textComponent = new TextComponent();
