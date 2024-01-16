@@ -59,13 +59,20 @@ class MiniBarsComponent
     private int maxValue;
     private int currentValue;
 
+    private boolean pulseColour = false;
+    private static final int PULSE_COLOUR_ALPHA_MIN = 50;
+    private static final int PULSE_COLOUR_ALPHA_MAX = 255;
+    private int pulseColourAlpha = 255;
+    private int pulseColourDirection = -1;
+    private int pulseColourIncrement = 3;
+
     private void refreshSkills()
     {
         maxValue = maxValueSupplier.get();
         currentValue = currentValueSupplier.get();
     }
 
-    void renderBar(MiniBarsConfig config, Graphics2D graphics, PanelComponent component, FullnessDirection dir, LabelStyle labelStyle, LabelPlacement labelLoc, int width, int height)
+    void renderBar(MiniBarsConfig config, Graphics2D graphics, PanelComponent component, FullnessDirection dir, LabelStyle labelStyle, LabelPlacement labelLoc, ThresholdGlowMode thresholdGlowMode, int thresholdGlowValue, int width, int height)
     {
         PanelComponent boundingBox = new PanelComponent();
         boundingBox.setBorder( new Rectangle( component.getBounds().x, component.getBounds().y, width, height ) );
@@ -99,13 +106,46 @@ class MiniBarsComponent
             eX = width - filledWidth;
         }
 
-        final Color fill = colorSupplier.get();
+        //final Color fill = colorSupplier.get();
+        Color fill = colorSupplier.get();
 
         refreshSkills();
 
         graphics.setColor(BACKGROUND);
         graphics.drawRect(component.getBounds().x, component.getBounds().y, width, height);
         graphics.fillRect(component.getBounds().x, component.getBounds().y, width, height );
+
+        pulseColour = false;
+        if ( thresholdGlowMode == ThresholdGlowMode.PERCENTAGE )
+        {
+            if ( currentValue * 100d / maxValue < thresholdGlowValue )
+            {
+                pulseColour = true;
+            }
+        }
+        else if ( thresholdGlowMode == ThresholdGlowMode.FLAT_VALUE )
+        {
+            if ( currentValue < thresholdGlowValue )
+            {
+                pulseColour = true;
+            }
+        }
+
+        if ( pulseColour )
+        {
+            pulseColourAlpha += pulseColourDirection * pulseColourIncrement;
+            if ( pulseColourAlpha > PULSE_COLOUR_ALPHA_MAX )
+            {
+                pulseColourAlpha = PULSE_COLOUR_ALPHA_MAX;
+                pulseColourDirection = -1;
+            }
+            else if ( pulseColourAlpha < PULSE_COLOUR_ALPHA_MIN )
+            {
+                pulseColourAlpha = PULSE_COLOUR_ALPHA_MIN;
+                pulseColourDirection = 1;
+            }
+            fill = new Color( fill.getRed(), fill.getGreen(), fill.getBlue(), pulseColourAlpha );
+        }
 
         graphics.setColor(fill);
         graphics.fillRect(eX + BORDER_SIZE,

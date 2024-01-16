@@ -69,10 +69,30 @@ public interface MiniBarsConfig extends Config
 		return LabelPlacement.TOP;
 	}
 
+	@ConfigItem(
+			position = 7,
+			keyName = "healthGlowThresholdMode",
+			name = "Health Bar Glow Threshold Mode",
+			description = "Choose how to determine the critical threshold at which to glow the Health bar",
+			section = healthSettingsSection
+	)
+	default ThresholdGlowMode healthGlowThresholdMode()
+	{
+		return ThresholdGlowMode.PERCENTAGE;
+	}
+
+	@ConfigItem(
+			position = 8,
+			keyName = "healthGlowThresholdValue",
+			name = "Health Bar Glow Threshold Value",
+			description = "Choose what value of the chosen mode to start glowing the Health bar",
+			section = healthSettingsSection
+	)
+	default int healthGlowThresholdValue() { return 10; }
 
 
 	@ConfigItem(
-			position = 7,
+			position = 9,
 			keyName = "showPrayer",
 			name = "Show Prayer",
 			description = "Render Prayer overlay"
@@ -80,14 +100,14 @@ public interface MiniBarsConfig extends Config
 	default boolean renderPrayer() { return false; }
 
 	@ConfigSection(
-			position = 8,
+			position = 10,
 			name = "Prayer Bar Settings",
 			description = "Prayer Bar Settings"
 	)
 	String prayerSettingsSection = "prayerSettings";
 
 	@ConfigItem(
-			position = 9,
+			position = 11,
 			keyName = "prayerSize",
 			name = "Prayer Bar Size",
 			description = "Choose the size of the Prayer bar",
@@ -96,7 +116,7 @@ public interface MiniBarsConfig extends Config
 	default Dimension prayerSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
-			position = 10,
+			position = 12,
 			keyName = "prayerFullnessDirection",
 			name = "Prayer Fullness Direction",
 			description = "Choose the direction of fullness of the Prayer bar",
@@ -105,7 +125,7 @@ public interface MiniBarsConfig extends Config
 	default FullnessDirection prayerFullnessDirection() { return FullnessDirection.RIGHT; }
 
 	@ConfigItem(
-			position = 11,
+			position = 13,
 			keyName = "prayerLabelStyle",
 			name = "Prayer Label Style",
 			description = "Choose the style of the Prayer bar's label",
@@ -117,7 +137,7 @@ public interface MiniBarsConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 12,
+			position = 14,
 			keyName = "prayerLabelPosition",
 			name = "Prayer Label Position",
 			description = "Choose the location of the Prayer bar's label",
@@ -128,9 +148,30 @@ public interface MiniBarsConfig extends Config
 		return LabelPlacement.TOP;
 	}
 
+	@ConfigItem(
+			position = 15,
+			keyName = "prayerGlowThresholdMode",
+			name = "Prayer Bar Glow Threshold Mode",
+			description = "Choose how to determine the critical threshold at which to glow the Prayer bar",
+			section = prayerSettingsSection
+	)
+	default ThresholdGlowMode prayerGlowThresholdMode()
+	{
+		return ThresholdGlowMode.PERCENTAGE;
+	}
 
 	@ConfigItem(
-			position = 13,
+			position = 16,
+			keyName = "prayerGlowThresholdValue",
+			name = "Prayer Bar Glow Threshold Value",
+			description = "Choose what value of the chosen mode to start glowing the Prayer bar",
+			section = prayerSettingsSection
+	)
+	default int prayerGlowThresholdValue() { return 10; }
+
+
+	@ConfigItem(
+			position = 17,
 			keyName = "showEnergy",
 			name = "Show Energy",
 			description = "Render Run Energy overlay"
@@ -138,14 +179,14 @@ public interface MiniBarsConfig extends Config
 	default boolean renderEnergy() { return false; }
 
 	@ConfigSection(
-			position = 14,
+			position = 18,
 			name = "Energy Bar Settings",
 			description = "Energy Bar Settings"
 	)
 	String energySettingsSection = "energySettings";
 
 	@ConfigItem(
-			position = 15,
+			position = 19,
 			keyName = "energySize",
 			name = "Energy Bar Size",
 			description = "Choose the size of the Energy bar",
@@ -154,7 +195,7 @@ public interface MiniBarsConfig extends Config
 	default Dimension energySize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
-			position = 16,
+			position = 20,
 			keyName = "energyFullnessDirection",
 			name = "Energy Fullness Direction",
 			description = "Choose the direction of fullness of the Energy bar",
@@ -163,7 +204,7 @@ public interface MiniBarsConfig extends Config
 	default FullnessDirection energyFullnessDirection() { return FullnessDirection.RIGHT; }
 
 	@ConfigItem(
-			position = 17,
+			position = 21,
 			keyName = "energyLabelStyle",
 			name = "Energy Label Style",
 			description = "Choose the style of the Energy bar's label",
@@ -175,7 +216,7 @@ public interface MiniBarsConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 18,
+			position = 22,
 			keyName = "energyLabelPosition",
 			name = "Energy Label Position",
 			description = "Choose the location of the Energy bar's label",
@@ -186,9 +227,30 @@ public interface MiniBarsConfig extends Config
 		return LabelPlacement.TOP;
 	}
 
+	@ConfigItem(
+			position = 23,
+			keyName = "energyGlowThresholdMode",
+			name = "Energy Bar Glow Threshold Mode",
+			description = "Choose how to determine the critical threshold at which to glow the Energy bar",
+			section = energySettingsSection
+	)
+	default ThresholdGlowMode energyGlowThresholdMode()
+	{
+		return ThresholdGlowMode.PERCENTAGE;
+	}
 
 	@ConfigItem(
-			position = 19,
+			position = 24,
+			keyName = "energyGlowThresholdValue",
+			name = "Energy Bar Glow Threshold Value",
+			description = "Choose what value of the chosen mode to start glowing the Energy bar",
+			section = energySettingsSection
+	)
+	default int energyGlowThresholdValue() { return 10; }
+
+
+	@ConfigItem(
+			position = 25,
 			keyName = "showSpecial",
 			name = "Show Special",
 			description = "Render Special Attack overlay"
@@ -196,14 +258,14 @@ public interface MiniBarsConfig extends Config
 	default boolean renderSpecial() { return false; }
 
 	@ConfigSection(
-			position = 20,
+			position = 26,
 			name = "Special Bar Settings",
 			description = "Special Bar Settings"
 	)
 	String specialSettingsSection = "specialSettings";
 
 	@ConfigItem(
-			position = 21,
+			position = 27,
 			keyName = "specialSize",
 			name = "Special Bar Size",
 			description = "Choose the size of the Special bar",
@@ -212,7 +274,7 @@ public interface MiniBarsConfig extends Config
 	default Dimension specialSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
-			position = 22,
+			position = 28,
 			keyName = "specialFullnessDirection",
 			name = "Special Fullness Direction",
 			description = "Choose the direction of fullness of the Special bar",
@@ -221,7 +283,7 @@ public interface MiniBarsConfig extends Config
 	default FullnessDirection specialFullnessDirection() { return FullnessDirection.RIGHT; }
 
 	@ConfigItem(
-			position = 23,
+			position = 29,
 			keyName = "specialLabelStyle",
 			name = "Special Label Style",
 			description = "Choose the style of the Special bar's label",
@@ -233,7 +295,29 @@ public interface MiniBarsConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 24,
+			position = 30,
+			keyName = "specialGlowThresholdMode",
+			name = "Special Bar Glow Threshold Mode",
+			description = "Choose how to determine the critical threshold at which to glow the Special bar",
+			section = specialSettingsSection
+	)
+	default ThresholdGlowMode specialGlowThresholdMode()
+	{
+		return ThresholdGlowMode.PERCENTAGE;
+	}
+
+	@ConfigItem(
+			position = 31,
+			keyName = "specialGlowThresholdValue",
+			name = "Special Bar Glow Threshold Value",
+			description = "Choose what value of the chosen mode to start glowing the Special bar",
+			section = specialSettingsSection
+	)
+	default int specialGlowThresholdValue() { return 10; }
+
+
+	@ConfigItem(
+			position = 32,
 			keyName = "specialLabelPosition",
 			name = "Special Label Position",
 			description = "Choose the location of the Special bar's label",
@@ -245,7 +329,7 @@ public interface MiniBarsConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 25,
+			position = 33,
 			keyName = "enableRestorationBars",
 			name = "Show Restores",
 			description = "Visually shows how much will be restored to your bars."
@@ -253,7 +337,7 @@ public interface MiniBarsConfig extends Config
 	default boolean enableRestorationBars() { return true; }
 
 	@ConfigItem(
-			position = 26,
+			position = 34,
 			keyName = "barOutlineThickness",
 			name = "Outline Effects Thickness",
 			description = "How thick to draw an outline around the bars to show regeneration, stamina potion duration, etc."
@@ -265,7 +349,7 @@ public interface MiniBarsConfig extends Config
 	default int outlineThickness() { return 3; }
 
 	@ConfigItem(
-			position = 27,
+			position = 35,
 			keyName = "hideAfterCombatDelay",
 			name = "Hide after combat delay",
 			description = "Amount of ticks before hiding status bars after no longer in combat. 0 = always show status bars."

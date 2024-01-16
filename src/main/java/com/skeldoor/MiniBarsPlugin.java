@@ -128,6 +128,8 @@ public class MiniBarsPlugin extends Plugin
 	private void onVarbitChanged(VarbitChanged ev)
 	{
 		healthOverlay.onVarbitChanged( ev );
+		energyOverlay.onVarbitChanged( ev );
+		prayerOverlay.onVarbitChanged( ev );
 	}
 
 	@Subscribe

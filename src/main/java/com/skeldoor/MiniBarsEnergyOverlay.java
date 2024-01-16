@@ -1,11 +1,16 @@
 package net.runelite.client.plugins.minibars;
 
 import java.awt.*;
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import javax.inject.Inject;
 
 import lombok.Getter;
 import net.runelite.api.*;
 import net.runelite.api.Point;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.itemstats.Effect;
@@ -14,6 +19,7 @@ import net.runelite.client.plugins.itemstats.StatChange;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.util.RSTimeUnit;
 
 public class MiniBarsEnergyOverlay extends OverlayPanel{
 
@@ -31,6 +37,8 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
     private final ItemStatChangesService itemStatService;
 
     private MiniBarsComponent barRenderer;
+
+    private double staminaDuration;
 
     @Inject
     MiniBarsEnergyOverlay(
@@ -73,7 +81,7 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
                     }
                 },
                 () -> ENERGY_HEAL_COLOR,
-                () -> 1d
+                () -> staminaDuration
         );
     }
 
@@ -82,7 +90,7 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderEnergy() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.energyFullnessDirection(), config.energyLabelStyle(), config.energyLabelPosition(), config.energySize().width, config.energySize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.energyFullnessDirection(), config.energyLabelStyle(), config.energyLabelPosition(), config.energyGlowThresholdMode(), config.energyGlowThresholdValue(), config.energySize().width, config.energySize().height );
 
             return config.energySize();
         }
@@ -123,4 +131,37 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
 
         return restoreValue;
     }
+
+    public void onVarbitChanged( VarbitChanged event )
+    {
+        if (event.getVarbitId() == Varbits.RUN_SLOWED_DEPLETION_ACTIVE
+                || event.getVarbitId() == Varbits.STAMINA_EFFECT
+                || event.getVarbitId() == Varbits.RING_OF_ENDURANCE_EFFECT)
+        {
+            // staminaEffectActive is checked to match https://github.com/Joshua-F/cs2-scripts/blob/741271f0c3395048c1bad4af7881a13734516adf/scripts/%5Bproc%2Cbuff_bar_get_value%5D.cs2#L25
+            int staminaEffectActive = client.getVarbitValue(Varbits.RUN_SLOWED_DEPLETION_ACTIVE);
+            int staminaPotionEffectVarb = client.getVarbitValue(Varbits.STAMINA_EFFECT);
+            int enduranceRingEffectVarb = client.getVarbitValue(Varbits.RING_OF_ENDURANCE_EFFECT);
+
+            final int totalStaminaEffect = staminaPotionEffectVarb + enduranceRingEffectVarb;
+            if ( staminaEffectActive == 1 )
+            {
+                updateStaminaTimer( totalStaminaEffect, i -> i * 10 );
+            }
+        }
+    }
+
+    private void updateStaminaTimer( final int varValue, final IntUnaryOperator tickDuration )
+    {
+        updateStaminaTimer( varValue, i -> i == 0, tickDuration );
+    }
+
+    private void updateStaminaTimer( final int varValue, final IntPredicate removeTimerCheck, final IntUnaryOperator tickDuration )
+    {
+        int ticks = tickDuration.applyAsInt(varValue);
+        final Duration duration = Duration.of(ticks, RSTimeUnit.GAME_TICKS);
+        staminaDuration = duration.getSeconds();
+    }
+
+
 }

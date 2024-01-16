@@ -110,7 +110,7 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
     {
         if ( plugin.isBarsDisplayed() && config.renderHealth() )
         {
-            barRenderer.renderBar( config, g, panelComponent, config.healthFullnessDirection(), config.healthLabelStyle(), config.healthLabelPosition(), config.healthSize().width, config.healthSize().height );
+            barRenderer.renderBar( config, g, panelComponent, config.healthFullnessDirection(), config.healthLabelStyle(), config.healthLabelPosition(), config.healthGlowThresholdMode(), config.healthGlowThresholdValue(), config.healthSize().width, config.healthSize().height );
             return config.healthSize();
         }
 
