@@ -74,7 +74,8 @@ public class MiniBarsPrayerOverlay extends OverlayPanel{
 
                     return prayerColor;
                 },
-                () -> PRAYER_HEAL_COLOR
+                () -> PRAYER_HEAL_COLOR,
+                () -> 1d
         );
     }
 

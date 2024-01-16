@@ -31,13 +31,20 @@ import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+
+import net.runelite.api.Client;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.components.TextComponent;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 
+import javax.inject.Inject;
+
 @RequiredArgsConstructor
 class MiniBarsComponent
 {
+    @Inject
+    private Client client;
+
     private static final Color BACKGROUND = new Color(0, 0, 0, 150);
     private static final Color OVERHEAL_COLOR = new Color(216, 255, 139, 150);
     private static final int BORDER_SIZE = 1;
@@ -48,6 +55,7 @@ class MiniBarsComponent
     private final Supplier<Integer> healSupplier;
     private final Supplier<Color> colorSupplier;
     private final Supplier<Color> healColorSupplier;
+    private final Supplier<Double> timeBasedEffectCounterSupplier;
     private int maxValue;
     private int currentValue;
 
@@ -62,9 +70,12 @@ class MiniBarsComponent
         PanelComponent boundingBox = new PanelComponent();
         boundingBox.setBorder( new Rectangle( component.getBounds().x, component.getBounds().y, width, height ) );
         boundingBox.setPreferredSize( new Dimension( width, height ) );
-        //boundingBox.setBackgroundColor( MiniBarsConstants.COLOUR_TRANSPARENT );
         component.getChildren().add(boundingBox);
 
+        if ( config.outlineThickness() > 0 )
+        {
+            renderOutline( config, graphics, component, dir, width, height );
+        }
 
         // start by assuming the bar will be filled rightward
         int eX = component.getBounds().x;
@@ -90,11 +101,6 @@ class MiniBarsComponent
 
         final Color fill = colorSupplier.get();
 
-
-
-
-
-
         refreshSkills();
 
         graphics.setColor(BACKGROUND);
@@ -118,6 +124,56 @@ class MiniBarsComponent
         }
     }
 
+    private void renderOutline( MiniBarsConfig config, Graphics2D graphics, PanelComponent component, FullnessDirection dir, int width, int height )
+    {
+        final int outlineSize = config.outlineThickness();
+
+        graphics.setColor( BACKGROUND );
+        graphics.drawRect( component.getBounds().x - outlineSize - 1, component.getBounds().y - outlineSize - 1, width + 2 * outlineSize + BORDER_SIZE + 1, height + 2 * outlineSize + BORDER_SIZE + 1 );
+
+        graphics.setColor( colorSupplier.get() );
+        if ( dir == FullnessDirection.TOP )
+        {
+            final int fullSize = height + outlineSize * 2 + BORDER_SIZE;
+            final int filledCurrentSize = getBarSize( 100, (int) Math.floor( timeBasedEffectCounterSupplier.get() * 100 ), fullSize );
+
+            Shape oldClip = graphics.getClip();
+            graphics.setClip( getOutsideEdge( graphics, new Rectangle( component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, width + 2 * outlineSize + BORDER_SIZE, height + 2 * outlineSize + BORDER_SIZE ), outlineSize, outlineSize, outlineSize, outlineSize ) );
+            graphics.fillRect(component.getBounds().x - outlineSize, component.getBounds().y - outlineSize + (fullSize - filledCurrentSize), width + 2 * outlineSize + BORDER_SIZE, height + 2 * outlineSize + BORDER_SIZE - (fullSize - filledCurrentSize) );
+            graphics.setClip( oldClip );
+        }
+        else if ( dir == FullnessDirection.BOTTOM )
+        {
+            final int fullSize = height + outlineSize * 2 + BORDER_SIZE;
+            final int filledCurrentSize = getBarSize( 100, (int) Math.floor( timeBasedEffectCounterSupplier.get() * 100 ), fullSize );
+
+            Shape oldClip = graphics.getClip();
+            graphics.setClip( getOutsideEdge( graphics, new Rectangle( component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, width + 2 * outlineSize + BORDER_SIZE, height + 2 * outlineSize + BORDER_SIZE ), outlineSize, outlineSize, outlineSize, outlineSize ) );
+            graphics.fillRect(component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, width + 2 * outlineSize + BORDER_SIZE, filledCurrentSize );
+            graphics.setClip( oldClip );
+        }
+        else if ( dir == FullnessDirection.LEFT )
+        {
+            final int fullSize = width + outlineSize * 2 + BORDER_SIZE;
+            final int filledCurrentSize = getBarSize( 100, (int) Math.floor( timeBasedEffectCounterSupplier.get() * 100 ), fullSize );
+
+            Shape oldClip = graphics.getClip();
+            graphics.setClip( getOutsideEdge( graphics, new Rectangle( component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, width + 2 * outlineSize + BORDER_SIZE, height + 2 * outlineSize + BORDER_SIZE ), outlineSize, outlineSize, outlineSize, outlineSize ) );
+            graphics.fillRect(component.getBounds().x - outlineSize + (fullSize - filledCurrentSize), component.getBounds().y - outlineSize,  (fullSize - filledCurrentSize), height + 2 * outlineSize + BORDER_SIZE );
+            graphics.setClip( oldClip );
+        }
+        else if ( dir == FullnessDirection.RIGHT )
+        {
+            final int fullSize = width + outlineSize * 2 + BORDER_SIZE;
+            final int filledCurrentSize = getBarSize( 100, (int) Math.floor( timeBasedEffectCounterSupplier.get() * 100 ), fullSize );
+
+            Shape oldClip = graphics.getClip();
+            graphics.setClip( getOutsideEdge( graphics, new Rectangle( component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, width + 2 * outlineSize + BORDER_SIZE, height + 2 * outlineSize + BORDER_SIZE ), outlineSize, outlineSize, outlineSize, outlineSize ) );
+            graphics.fillRect(component.getBounds().x - outlineSize, component.getBounds().y - outlineSize, filledCurrentSize, height + 2 * outlineSize + BORDER_SIZE );
+            graphics.setClip( oldClip );
+        }
+    }
+
     private void renderText(MiniBarsConfig config, Graphics2D graphics, LabelStyle labelStyle, LabelPlacement labelLoc, int x, int y, int barWidth, int barHeight )
     {
         graphics.setFont(FontManager.getRunescapeSmallFont());
@@ -133,10 +189,12 @@ class MiniBarsComponent
             counterText = df.format( (float) (currentValue * 100) / maxValue ) + "%";
         }
 
+        final int outlineSize = config.outlineThickness();
+
         int sizeOfCounterX = graphics.getFontMetrics().stringWidth(counterText);
         int sizeOfCounterY = graphics.getFontMetrics().getHeight();
         int xOffset = (barWidth / 2) - (sizeOfCounterX / 2);
-        int yOffset = 0;
+        int yOffset = -(int) Math.floor(outlineSize * 1.75);
 
         if ( labelLoc == LabelPlacement.CENTRE )
         {
@@ -145,16 +203,16 @@ class MiniBarsComponent
         }
         else if ( labelLoc == LabelPlacement.BOTTOM )
         {
-            yOffset = barHeight + sizeOfCounterY;
+            yOffset = barHeight + sizeOfCounterY + (int) Math.floor(outlineSize * 1.75);
         }
         else if ( labelLoc == LabelPlacement.LEFT )
         {
-            xOffset = -(int) Math.floor(sizeOfCounterX * 1.125);
+            xOffset = -(int) Math.floor(sizeOfCounterX * 1.125) - (int) Math.floor(outlineSize * 1.75);
             yOffset = (barHeight / 2) + (sizeOfCounterY / 2);
         }
         else if ( labelLoc == LabelPlacement.RIGHT )
         {
-            xOffset = barWidth + 2;
+            xOffset = barWidth + 4 + (int) Math.floor(outlineSize * 1.75);
             yOffset = (barHeight / 2) + (sizeOfCounterY / 2);
         }
 
@@ -265,5 +323,19 @@ class MiniBarsComponent
         }
 
         return (int) Math.round(ratio * size);
+    }
+
+    static public Shape getOutsideEdge( Graphics gc, Rectangle bb, int top, int lft, int btm, int rgt )
+    {
+        int                                 ot=bb.y            , it=(ot+top);
+        int                                 ol=bb.x            , il=(ol+lft);
+        int                                 ob=(bb.y+bb.height), ib=(ob-btm);
+        int                                 or=(bb.x+bb.width ), ir=(or-rgt);
+
+        return new Polygon(
+                new int[]{ ol, ol, or, or, ol, ol,   il, ir, ir, il, il },
+                new int[]{ it, ot, ot, ob, ob, it,   it, it, ib, ib, it },
+                11
+        );
     }
 }

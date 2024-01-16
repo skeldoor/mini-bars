@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2019, Sean Dewar <https://github.com/seandewar>
+ * Copyright (c) 2018, Abex
+ * Copyright (c) 2018, Zimaya <https://github.com/Zimaya>
+ * Copyright (c) 2017, Adam <Adam@sigterm.info>
  * Copyright (c) 2018, Jos <Malevolentdev@gmail.com>
  * Copyright (c) 2024, Seung <swhahm94@gmail.com>
  * All rights reserved.
@@ -29,12 +33,12 @@ import javax.inject.Inject;
 import com.google.inject.Provides;
 import lombok.AccessLevel;
 import lombok.Getter;
-import net.runelite.api.Actor;
-import net.runelite.api.Client;
-import net.runelite.api.NPC;
-import net.runelite.api.Player;
-import net.runelite.api.Varbits;
+import net.runelite.api.*;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.VarbitChanged;
+import net.runelite.client.Notifier;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -108,9 +112,30 @@ public class MiniBarsPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onGameTick(GameTick gameTick)
+	private void onGameStateChanged(GameStateChanged ev)
+	{
+		healthOverlay.onGameStateChanged( ev );
+		specialOverlay.onGameStateChanged( ev );
+	}
+
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		specialOverlay.onItemContainerChanged( event );
+	}
+
+	@Subscribe
+	private void onVarbitChanged(VarbitChanged ev)
+	{
+		healthOverlay.onVarbitChanged( ev );
+	}
+
+	@Subscribe
+	public void onGameTick( GameTick gameTick )
 	{
 		checkMiniBars();
+		healthOverlay.onGameTick( gameTick );
+		specialOverlay.onGameTick( gameTick );
 	}
 
 	@Subscribe

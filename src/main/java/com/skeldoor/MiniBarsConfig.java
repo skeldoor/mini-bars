@@ -31,7 +31,7 @@ public interface MiniBarsConfig extends Config
 			description = "Choose the size of the Health bar",
 			section = healthSettingsSection
 	)
-	default Dimension healthSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, MiniBarsConstants.STANDARD_HEIGHT); }
+	default Dimension healthSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
 			position = 4,
@@ -93,7 +93,7 @@ public interface MiniBarsConfig extends Config
 			description = "Choose the size of the Prayer bar",
 			section = prayerSettingsSection
 	)
-	default Dimension prayerSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, MiniBarsConstants.STANDARD_HEIGHT); }
+	default Dimension prayerSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
 			position = 10,
@@ -151,7 +151,7 @@ public interface MiniBarsConfig extends Config
 			description = "Choose the size of the Energy bar",
 			section = energySettingsSection
 	)
-	default Dimension energySize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, MiniBarsConstants.STANDARD_HEIGHT); }
+	default Dimension energySize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
 			position = 16,
@@ -209,7 +209,7 @@ public interface MiniBarsConfig extends Config
 			description = "Choose the size of the Special bar",
 			section = specialSettingsSection
 	)
-	default Dimension specialSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, MiniBarsConstants.STANDARD_HEIGHT); }
+	default Dimension specialSize() { return new Dimension(ComponentConstants.STANDARD_WIDTH, 15 ); }
 
 	@ConfigItem(
 			position = 22,
@@ -254,6 +254,18 @@ public interface MiniBarsConfig extends Config
 
 	@ConfigItem(
 			position = 26,
+			keyName = "barOutlineThickness",
+			name = "Outline Effects Thickness",
+			description = "How thick to draw an outline around the bars to show regeneration, stamina potion duration, etc."
+	)
+	@Range(
+			min = 0,
+			max = 5
+	)
+	default int outlineThickness() { return 3; }
+
+	@ConfigItem(
+			position = 27,
 			keyName = "hideAfterCombatDelay",
 			name = "Hide after combat delay",
 			description = "Amount of ticks before hiding status bars after no longer in combat. 0 = always show status bars."

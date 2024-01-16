@@ -3,10 +3,16 @@ package net.runelite.client.plugins.minibars;
 import java.awt.*;
 import javax.inject.Inject;
 
+import lombok.Getter;
 import net.runelite.api.*;
 import net.runelite.api.Point;
+import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.itemstats.Effect;
 import net.runelite.client.plugins.itemstats.ItemStatChangesService;
 import net.runelite.client.plugins.itemstats.StatChange;
@@ -32,6 +38,12 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
     private final ItemStatChangesService itemStatService;
 
     private MiniBarsComponent barRenderer;
+
+    private static final int NORMAL_HP_REGEN_TICKS = 100;
+
+    @Getter
+    private double hitpointsPercentage;
+    private int ticksSinceHPRegen;
 
     @Inject
     MiniBarsHealthOverlay(
@@ -88,7 +100,8 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
 
                     return HEALTH_COLOR;
                 },
-                () -> HEAL_COLOR
+                () -> HEAL_COLOR,
+                () -> hitpointsPercentage
         );
     }
 
@@ -141,5 +154,48 @@ public class MiniBarsHealthOverlay extends OverlayPanel{
     private boolean inLms()
     {
         return client.getWidget(ComponentID.LMS_INGAME_INFO) != null;
+    }
+
+
+    public void onGameStateChanged(GameStateChanged ev)
+    {
+        if (ev.getGameState() == GameState.HOPPING || ev.getGameState() == GameState.LOGIN_SCREEN)
+        {
+            ticksSinceHPRegen = -2; // For some reason this makes this accurate
+        }
+    }
+
+    public void onVarbitChanged(VarbitChanged ev)
+    {
+        if (ev.getVarbitId() == Varbits.PRAYER_RAPID_HEAL)
+        {
+            ticksSinceHPRegen = 0;
+        }
+    }
+
+    @Subscribe
+    public void onGameTick(GameTick event)
+    {
+        int ticksPerHPRegen = NORMAL_HP_REGEN_TICKS;
+        if (client.isPrayerActive(Prayer.RAPID_HEAL))
+        {
+            ticksPerHPRegen /= 2;
+        }
+
+        ticksSinceHPRegen = (ticksSinceHPRegen + 1) % ticksPerHPRegen;
+        hitpointsPercentage = ticksSinceHPRegen / (double) ticksPerHPRegen;
+
+        int currentHP = client.getBoostedSkillLevel(Skill.HITPOINTS);
+        int maxHP = client.getRealSkillLevel(Skill.HITPOINTS);
+        //if ( currentHP == maxHP )
+        //{
+        //    hitpointsPercentage = 0;
+        //}
+        //else if (currentHP > maxHP)
+        if (currentHP > maxHP)
+        {
+            // Show it going down
+            hitpointsPercentage = 1 - hitpointsPercentage;
+        }
     }
 }

@@ -3,6 +3,7 @@ package net.runelite.client.plugins.minibars;
 import java.awt.*;
 import javax.inject.Inject;
 
+import lombok.Getter;
 import net.runelite.api.*;
 import net.runelite.api.Point;
 import net.runelite.api.widgets.ComponentID;
@@ -71,7 +72,8 @@ public class MiniBarsEnergyOverlay extends OverlayPanel{
                         return ENERGY_COLOR;
                     }
                 },
-                () -> ENERGY_HEAL_COLOR
+                () -> ENERGY_HEAL_COLOR,
+                () -> 1d
         );
     }
 
