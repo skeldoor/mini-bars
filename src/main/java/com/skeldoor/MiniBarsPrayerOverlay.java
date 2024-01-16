@@ -36,6 +36,7 @@ import javax.inject.Inject;
 
 import net.runelite.api.*;
 import net.runelite.api.Point;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.widgets.ComponentID;
@@ -118,7 +119,19 @@ public class MiniBarsPrayerOverlay extends OverlayPanel{
                     return prayerColor;
                 },
                 () -> PRAYER_HEAL_COLOR,
-                () -> getCurrentPrayerTimeCost() / elapsedPrayerTime
+                () ->
+                {
+                    double prayerTimeCost = getCurrentPrayerTimeCost();
+                    if ( prayerTimeCost == -1 )
+                    {
+                        return 0d;
+                    }
+                    return 1 - (elapsedPrayerTime % prayerTimeCost) / prayerTimeCost;
+                }
+
+
+
+
         );
     }
 
@@ -184,12 +197,29 @@ public class MiniBarsPrayerOverlay extends OverlayPanel{
         }
     }
 
-    public void onVarbitChanged(VarbitChanged ev)
+    public void onGameTick( GameTick gameTick )
     {
-        if (ev.getVarbitId() == Varbits.PRAYER_RAPID_HEAL)
+        if ( isAnyPrayerActive() )
         {
-            //ticksSinceHPRegen = 0;
+            elapsedPrayerTime += 0.6;
         }
+        else
+        {
+            elapsedPrayerTime = 0;
+        }
+    }
+
+    private boolean isAnyPrayerActive()
+    {
+        for (Prayer pray : Prayer.values())//Check if any prayers are active
+        {
+            if (client.isPrayerActive(pray))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private int totalPrayerBonus(Item[] items)
