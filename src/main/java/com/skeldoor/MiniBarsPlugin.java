@@ -129,7 +129,6 @@ public class MiniBarsPlugin extends Plugin
 	{
 		healthOverlay.onVarbitChanged( ev );
 		energyOverlay.onVarbitChanged( ev );
-		prayerOverlay.onVarbitChanged( ev );
 	}
 
 	@Subscribe
@@ -138,6 +137,7 @@ public class MiniBarsPlugin extends Plugin
 		checkMiniBars();
 		healthOverlay.onGameTick( gameTick );
 		specialOverlay.onGameTick( gameTick );
+		prayerOverlay.onGameTick( gameTick );
 	}
 
 	@Subscribe
